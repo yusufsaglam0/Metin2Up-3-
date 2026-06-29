@@ -27,7 +27,7 @@ module.exports = {
   admin: {
     username: process.env.ADMIN_USERNAME || 'admin',
     password: process.env.ADMIN_PASSWORD || 'admin123',
-    email: process.env.ADMIN_EMAIL || 'admin@metin2sefiri.local',
+    email: process.env.ADMIN_EMAIL || 'admin@metin2up.local',
   },
 
   rateLimit: {

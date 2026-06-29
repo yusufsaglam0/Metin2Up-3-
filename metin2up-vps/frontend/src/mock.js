@@ -1,4 +1,4 @@
-// Mock data for Metin2 Sefiri clone
+// Mock data for Metin2UP clone
 
 export const navLinks = [
   { label: 'Anasayfa', href: '/', active: true },
@@ -9,29 +9,29 @@ export const navLinks = [
 ];
 
 export const sideBanner = {
-  image: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/m2.png',
-  title: 'METIN2 SEFIRI',
+  image: 'https://www.metin2up.com/wp-content/uploads/2026/04/m2.png',
+  title: 'METIN2UP',
   subtitle: 'BU ALANA REKLAM VEREBİLİRİNİZ!',
   contact: 'Reklam için iletişim',
-  discord: 'Discord; discord.gg/metin2sefiri',
+  discord: 'Discord; discord.gg/metin2up',
 };
 
 export const vipTopics = [
   {
     id: 1,
     title: 'Metin2 Sohbet Grubu – Facebook Grubu',
-    author: 'Metin2Sefiri',
-    authorAvatar: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/33-1.png',
+    author: 'Metin2UP',
+    authorAvatar: 'https://www.metin2up.com/wp-content/uploads/2025/06/33-1.png',
     replies: 2,
     views: 874,
-    lastReply: { user: 'Server Tanıtım', text: 'katıldık', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/images.png' },
+    lastReply: { user: 'Server Tanıtım', text: 'katıldık', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/04/images.png' },
     verified: true,
   },
   {
     id: 2,
     title: 'M2LODOS 1-105 ORTA EMEK – 26 HAZİRAN AÇILIYOR!',
     author: 'M2 Lodos',
-    authorAvatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/06/Logo2.png',
+    authorAvatar: 'https://www.metin2up.com/wp-content/uploads/2026/06/Logo2.png',
     replies: 0,
     views: 33,
     lastReply: null,
@@ -44,7 +44,7 @@ export const forumCategories = [
     id: 'emek',
     title: 'Metin2 Emek Server Kategorisi',
     description: 'Ücretsiz Konu Paylaşım Alanıdır.',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/m2.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2026/04/m2.png',
     subForums: [
       {
         id: 'sf-1-105',
@@ -52,7 +52,7 @@ export const forumCategories = [
         description: '1-105 Sunucuları içeriden takip edebilirsiniz. Üye olarak konu açabilirsiniz.',
         topics: 77,
         replies: 58,
-        lastPost: { title: 'LotusMt2 1-105 Orta Emek / 27 ŞUBAT Açılıyor!', user: 'Kaptan Mikro', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2025/07/466380737_8787871551252117_7775012415435230135_n.jpg', verified: true },
+        lastPost: { title: 'LotusMt2 1-105 Orta Emek / 27 ŞUBAT Açılıyor!', user: 'Kaptan Mikro', avatar: 'https://www.metin2up.com/wp-content/uploads/2025/07/466380737_8787871551252117_7775012415435230135_n.jpg', verified: true },
       },
       {
         id: 'sf-1-120',
@@ -60,7 +60,7 @@ export const forumCategories = [
         description: '1-120 Sunucuları içeriden takip edebilirsiniz. Üye olarak konu açabilirsiniz.',
         topics: 46,
         replies: 21,
-        lastPost: { title: 'Metius2 1-120 Mobil Oyun – 29 Mayıs Açılıyor!', user: 'Metius2 Mobil', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/05/metiusLogo1.png', verified: true },
+        lastPost: { title: 'Metius2 1-120 Mobil Oyun – 29 Mayıs Açılıyor!', user: 'Metius2 Mobil', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/05/metiusLogo1.png', verified: true },
       },
       {
         id: 'sf-1-99',
@@ -76,7 +76,7 @@ export const forumCategories = [
         description: 'You can follow Global servers from the inside. By becoming a member, you can create topics.',
         topics: 16,
         replies: 3,
-        lastPost: { title: 'Aelys2 Fury 1-105 Global 22.05.2026', user: 'Aelys2 global', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/05/Aelys2-1770140627-mobile.jpg', verified: true },
+        lastPost: { title: 'Aelys2 Fury 1-105 Global 22.05.2026', user: 'Aelys2 global', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/05/Aelys2-1770140627-mobile.jpg', verified: true },
       },
     ],
   },
@@ -84,7 +84,7 @@ export const forumCategories = [
     id: 'kolay',
     title: 'Metin2 Kolay Server Kategorisi',
     description: 'Ücretsiz Konu Paylaşım Alanıdır.',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/m2.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2026/04/m2.png',
     subForums: [
       {
         id: 'sf-55-120',
@@ -92,7 +92,7 @@ export const forumCategories = [
         description: '55-120 Sunucuları içeriden takip edebilirsiniz. Üye olarak konu açabilirsiniz.',
         topics: 60,
         replies: 54,
-        lastPost: { title: 'Pitaya2 55-120 New School – 19 Haziran Açılıyor !', user: 'Pitaya2 55-120', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/06/PitayaSunucuProfil-1.gif', verified: true },
+        lastPost: { title: 'Pitaya2 55-120 New School – 19 Haziran Açılıyor !', user: 'Pitaya2 55-120', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/06/PitayaSunucuProfil-1.gif', verified: true },
       },
       {
         id: 'sf-65-250',
@@ -100,7 +100,7 @@ export const forumCategories = [
         description: '65-250 Sunucuları içeriden takip edebilirsiniz. Üye olarak konu açabilirsiniz.',
         topics: 78,
         replies: 46,
-        lastPost: { title: 'AtakMt2 70-250 Orta Emek / 12 Haziran Açılıyor!', user: 'Atak Metin2', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/06/6a25e35154fc69.07999907_lpnjeoiqfkmhg.png', verified: true },
+        lastPost: { title: 'AtakMt2 70-250 Orta Emek / 12 Haziran Açılıyor!', user: 'Atak Metin2', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/06/6a25e35154fc69.07999907_lpnjeoiqfkmhg.png', verified: true },
       },
       {
         id: 'sf-wslik',
@@ -108,7 +108,7 @@ export const forumCategories = [
         description: 'Wslik Sunucuları içeriden takip edebilirsiniz. Üye olarak konu açabilirsiniz.',
         topics: 65,
         replies: 60,
-        lastPost: { title: 'Yeni VslikMt2 Hem Vslik/Farm Yapısı İle 19 Haziran Cuma Günü Saat 21.00\'da Açılıyor.', user: 'Pangan ESTR', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/02/1e3c61649a8ac7ec575fe2cf24d82a01.jpg', verified: false, isNew: true },
+        lastPost: { title: 'Yeni VslikMt2 Hem Vslik/Farm Yapısı İle 19 Haziran Cuma Günü Saat 21.00\'da Açılıyor.', user: 'Pangan ESTR', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/02/1e3c61649a8ac7ec575fe2cf24d82a01.jpg', verified: false, isNew: true },
       },
     ],
   },
@@ -116,7 +116,7 @@ export const forumCategories = [
     id: 'hata',
     title: 'Hata Çözümleri ve Destek',
     description: 'Hata Çözümleri ve Destek Paylaşım Alanı',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/333-1.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2025/06/333-1.png',
     subForums: [
       {
         id: 'sf-diger',
@@ -140,7 +140,7 @@ export const forumCategories = [
     id: 'genel',
     title: 'Metin2 Genel',
     description: '',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/333-1.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2025/06/333-1.png',
     subForums: [
       {
         id: 'sf-grafik',
@@ -156,7 +156,7 @@ export const forumCategories = [
         description: 'Metin2 Lonca Tanıtım Bölgesi',
         topics: 20,
         replies: 14,
-        lastPost: { title: 'ABSORBE EKİBİ +40 KADROSU İLE DEVAM ALIMLAR ACIK TS3 !', user: 'Metin2Sefiri', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/33-1.png', verified: true },
+        lastPost: { title: 'ABSORBE EKİBİ +40 KADROSU İLE DEVAM ALIMLAR ACIK TS3 !', user: 'Metin2UP', avatar: 'https://www.metin2up.com/wp-content/uploads/2025/06/33-1.png', verified: true },
       },
       {
         id: 'sf-sohbet',
@@ -172,7 +172,7 @@ export const forumCategories = [
         description: 'Metin2 oyuncuları için görevler, itemler, farm ve level kasma rehberi: Metin2 Wiki & Oyun Kılavuzu.',
         topics: 120,
         replies: 16,
-        lastPost: { title: 'Büyülü Orman ve Jotun Thrym Solo Kesim Rehberi', user: 'co muro', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/01/s-9ebfc5d8842e456f728965c8083f1f177c2e2e04.jpg', verified: false },
+        lastPost: { title: 'Büyülü Orman ve Jotun Thrym Solo Kesim Rehberi', user: 'co muro', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/01/s-9ebfc5d8842e456f728965c8083f1f177c2e2e04.jpg', verified: false },
       },
     ],
   },
@@ -180,7 +180,7 @@ export const forumCategories = [
     id: 'developer',
     title: 'Metin2 Developer Kategorisi',
     description: '',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/333-1.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2025/06/333-1.png',
     subForums: [
       {
         id: 'sf-python',
@@ -188,15 +188,15 @@ export const forumCategories = [
         description: '',
         topics: 9,
         replies: 6,
-        lastPost: { title: 'Metin2 – Site Domainler Satılıktır !', user: 'Metin2Sefiri', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2025/06/33-1.png', verified: true },
+        lastPost: { title: 'Metin2 – Site Domainler Satılıktır !', user: 'Metin2UP', avatar: 'https://www.metin2up.com/wp-content/uploads/2025/06/33-1.png', verified: true },
       },
       {
         id: 'sf-gm',
         name: 'Metin2 GM Kodları',
-        description: 'Metin2 GM Kodlarına Burdan Bakabilirsiniz - Metin2 Sefiri',
+        description: 'Metin2 GM Kodlarına Burdan Bakabilirsiniz - Metin2UP',
         topics: 36,
         replies: 17,
-        lastPost: { title: 'Çiftel Silah Kodları', user: 'Metin2 Sefiri Moderetor', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/Logo-Saydam-Kopya.png', verified: true },
+        lastPost: { title: 'Çiftel Silah Kodları', user: 'Metin2UP Moderetor', avatar: 'https://www.metin2up.com/wp-content/uploads/Logo-Saydam-Kopya.png', verified: true },
       },
       {
         id: 'sf-quest',
@@ -204,7 +204,7 @@ export const forumCategories = [
         description: 'Metin2 PvP Quest Konu Alanı',
         topics: 6,
         replies: 3,
-        lastPost: { title: 'Boss Notice Bilgi Questi', user: 'emre martın', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/images.jpg', verified: false },
+        lastPost: { title: 'Boss Notice Bilgi Questi', user: 'emre martın', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/04/images.jpg', verified: false },
       },
       {
         id: 'sf-files',
@@ -220,7 +220,7 @@ export const forumCategories = [
     id: 'video',
     title: 'Video ve Yayın Kanal Tanıtımları',
     description: 'İçerik Üreticisi İçin Açılmış Üçretsiz Konu Paylaşım alanıdır.',
-    icon: 'https://www.metin2sefiri.com/wp-content/uploads/2025/07/icons8-video-call-48.png',
+    icon: 'https://www.metin2up.com/wp-content/uploads/2025/07/icons8-video-call-48.png',
     subForums: [
       {
         id: 'sf-tiktok',
@@ -228,7 +228,7 @@ export const forumCategories = [
         description: 'Tiktok Yayınızı ve Kendiniz Hakkında Konu Paylaşım Alanıdır.',
         topics: 7,
         replies: 6,
-        lastPost: { title: 'Begumistan Tiktok Metin2 Yayıncısı', user: 'Begumistan Begumistan', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/06/WhatsApp_Image_2026-05-05_at_19.19.091-2.jpeg', verified: false },
+        lastPost: { title: 'Begumistan Tiktok Metin2 Yayıncısı', user: 'Begumistan Begumistan', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/06/WhatsApp_Image_2026-05-05_at_19.19.091-2.jpeg', verified: false },
       },
       {
         id: 'sf-yt',
@@ -236,7 +236,7 @@ export const forumCategories = [
         description: 'Youtube Yayınızı ve Kendiniz Hakkında Konu Paylaşım Alanıdır.',
         topics: 8,
         replies: 3,
-        lastPost: { title: 'Maykre Metin2 Partner', user: 'Maykre Partner', avatar: 'https://www.metin2sefiri.com/wp-content/uploads/2026/04/logo-1.png', verified: false },
+        lastPost: { title: 'Maykre Metin2 Partner', user: 'Maykre Partner', avatar: 'https://www.metin2up.com/wp-content/uploads/2026/04/logo-1.png', verified: false },
       },
     ],
   },

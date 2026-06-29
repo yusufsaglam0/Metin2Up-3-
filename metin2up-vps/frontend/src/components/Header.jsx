@@ -25,7 +25,7 @@ export default function Header() {
           <Link to="/" className="flex items-center shrink-0">
             <div className="text-[#e8c46b] font-black text-lg tracking-tight leading-none" style={{ fontFamily: "'Cinzel', serif" }}>
               <span className="text-2xl" style={{ background: 'linear-gradient(180deg, #ffe27a, #c98a1a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>METIN2</span>
-              <div className="text-[10px] text-[#c98a1a] tracking-[0.3em] mt-1">SEFIRI</div>
+              <div className="text-[10px] text-[#c98a1a] tracking-[0.3em] mt-1">UP</div>
             </div>
           </Link>
 

@@ -5,7 +5,7 @@
 module.exports = {
   apps: [
     {
-      name: 'metin2sefiri-api',
+      name: 'metin2up-api',
       script: 'server.js',
       cwd: __dirname,
       instances: 'max',

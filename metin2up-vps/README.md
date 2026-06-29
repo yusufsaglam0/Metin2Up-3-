@@ -1,4 +1,4 @@
-# Metin2 Sefiri — Forum Platformu
+# Metin2UP — Forum Platformu
 
 Production-ready, full-stack forum yazılımı. **React + Node.js (Express) + MongoDB Atlas** stack.
 
@@ -21,7 +21,7 @@ Production-ready, full-stack forum yazılımı. **React + Node.js (Express) + Mo
 ## 🗂️ Proje Yapısı
 
 ```
-m2sefiri-vps/
+m2up-vps/
 ├── backend/                    # Node.js + Express API
 │   ├── server.js               # Entry point
 │   ├── package.json
@@ -38,7 +38,7 @@ m2sefiri-vps/
 │   ├── public/
 │   └── .env.example
 ├── nginx/
-│   └── metin2sefiri.conf       # Nginx reverse proxy config
+│   └── metin2up.conf       # Nginx reverse proxy config
 └── README.md
 ```
 
@@ -100,7 +100,7 @@ Varsayılan admin: `admin` / `ChangeThisStrongPassword123!` (`.env`'deki değerl
 5. Cluster → **Connect** → **Drivers** → Node.js → connection string'i kopyala
 6. Connection string'i `backend/.env` içindeki `MONGO_URI` değişkenine yapıştır:
    ```
-   MONGO_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/metin2sefiri?retryWrites=true&w=majority
+   MONGO_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/metin2up?retryWrites=true&w=majority
    ```
    (`USER`, `PASSWORD`, `cluster0.xxxxx` kısımlarını kendi değerlerinle değiştir.)
 
@@ -174,14 +174,14 @@ sudo ufw --force enable
 sudo mkdir -p /var/www
 sudo chown $USER:$USER /var/www
 cd /var/www
-git clone https://github.com/KULLANICI/Metin2Up.git metin2sefiri
-cd metin2sefiri
+git clone https://github.com/KULLANICI/Metin2Up.git metin2up
+cd metin2up
 ```
 
 ### Adım 3 — Backend
 
 ```bash
-cd /var/www/metin2sefiri/backend
+cd /var/www/metin2up/backend
 cp .env.example .env
 nano .env
 # Güncellenecekler:
@@ -189,7 +189,7 @@ nano .env
 #   PORT=5000
 #   MONGO_URI=mongodb+srv://... (Atlas connection string)
 #   JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(48).toString('hex'))")
-#   CORS_ORIGINS=https://metin2sefiri.com,https://www.metin2sefiri.com
+#   CORS_ORIGINS=https://metin2up.com,https://www.metin2up.com
 #   ADMIN_PASSWORD=KENDI_GUCLU_SIFREN
 
 npm ci --omit=dev   # Sadece production paketleri
@@ -204,10 +204,10 @@ Doğrula: `pm2 status` ve `curl http://localhost:5000/api/health`
 ### Adım 4 — Frontend build
 
 ```bash
-cd /var/www/metin2sefiri/frontend
+cd /var/www/metin2up/frontend
 cp .env.example .env
 nano .env
-# REACT_APP_BACKEND_URL=https://metin2sefiri.com
+# REACT_APP_BACKEND_URL=https://metin2up.com
 
 npm ci
 npm run build
@@ -217,12 +217,12 @@ npm run build
 ### Adım 5 — Nginx
 
 ```bash
-sudo cp /var/www/metin2sefiri/nginx/metin2sefiri.conf /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/metin2sefiri.conf /etc/nginx/sites-enabled/
+sudo cp /var/www/metin2up/nginx/metin2up.conf /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/metin2up.conf /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 
-# Konfigürasyondaki `metin2sefiri.com` ifadelerini kendi domain'inle değiştir:
-sudo nano /etc/nginx/sites-available/metin2sefiri.conf
+# Konfigürasyondaki `metin2up.com` ifadelerini kendi domain'inle değiştir:
+sudo nano /etc/nginx/sites-available/metin2up.conf
 
 sudo nginx -t                  # Sentaks kontrolü
 sudo systemctl reload nginx
@@ -231,18 +231,18 @@ sudo systemctl reload nginx
 ### Adım 6 — SSL (Let's Encrypt)
 
 ```bash
-sudo certbot --nginx -d metin2sefiri.com -d www.metin2sefiri.com
+sudo certbot --nginx -d metin2up.com -d www.metin2up.com
 sudo systemctl status certbot.timer   # Otomatik yenileme aktif
 ```
 
 ### Adım 7 — Güncelleme iş akışı (sonradan)
 
 ```bash
-cd /var/www/metin2sefiri
+cd /var/www/metin2up
 git pull origin main
 
 # Backend
-cd backend && npm ci --omit=dev && pm2 reload metin2sefiri-api
+cd backend && npm ci --omit=dev && pm2 reload metin2up-api
 
 # Frontend
 cd ../frontend && npm ci && npm run build
@@ -254,22 +254,22 @@ cd ../frontend && npm ci && npm run build
 
 ```bash
 # Backend logları
-pm2 logs metin2sefiri-api
-pm2 logs metin2sefiri-api --lines 200
+pm2 logs metin2up-api
+pm2 logs metin2up-api --lines 200
 
 # PM2 monitoring
 pm2 monit
 
 # Yeniden başlat
-pm2 restart metin2sefiri-api
-pm2 reload metin2sefiri-api   # Zero-downtime
+pm2 restart metin2up-api
+pm2 reload metin2up-api   # Zero-downtime
 
 # Nginx logları
-sudo tail -f /var/log/nginx/metin2sefiri.error.log
-sudo tail -f /var/log/nginx/metin2sefiri.access.log
+sudo tail -f /var/log/nginx/metin2up.error.log
+sudo tail -f /var/log/nginx/metin2up.access.log
 
 # Seed (ilk kurulumda otomatik çalışır, manuel de tetiklenebilir)
-cd /var/www/metin2sefiri/backend && npm run seed
+cd /var/www/metin2up/backend && npm run seed
 ```
 
 ---
@@ -295,4 +295,4 @@ MIT — Özgürce kullan, fork'la, geliştir.
 
 ## ✉️ İletişim
 
-Discord: discord.gg/metin2sefiri
+Discord: discord.gg/metin2up

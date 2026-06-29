@@ -15,7 +15,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   useEffect(() => {
-    document.title = "Metin2 Sefiri – Forum | Metin2 PVP Serverler ve Tanıtımları";
+    document.title = "Metin2UP – Forum | Metin2 PVP Serverler ve Tanıtımları";
   }, []);
   return (
     <div className="App">

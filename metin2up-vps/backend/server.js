@@ -1,5 +1,5 @@
 /**
- * Metin2 Sefiri - Express server entry point
+ * Metin2UP - Express server entry point
  */
 
 require('dotenv').config();
@@ -62,11 +62,11 @@ app.use('/api/', generalLimiter);
 
 // Health check
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, service: 'metin2sefiri-api', env: config.nodeEnv, ts: new Date().toISOString() });
+  res.json({ ok: true, service: 'metin2up-api', env: config.nodeEnv, ts: new Date().toISOString() });
 });
 
 app.get('/api', (_req, res) => {
-  res.json({ message: 'Metin2 Sefiri API', version: '1.0.0' });
+  res.json({ message: 'Metin2UP API', version: '1.0.0' });
 });
 
 // Mount routes
@@ -92,7 +92,7 @@ async function start() {
     await connectDB();
     await seed();
     const server = app.listen(config.port, '0.0.0.0', () => {
-      console.log(`✓ Metin2 Sefiri API ${config.nodeEnv} mode on port ${config.port}`);
+      console.log(`✓ Metin2UP API ${config.nodeEnv} mode on port ${config.port}`);
     });
     const shutdown = (sig) => {
       console.log(`\n[${sig}] kapanıyor...`);

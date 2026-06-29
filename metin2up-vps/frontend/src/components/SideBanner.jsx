@@ -30,7 +30,7 @@ export default function SideBanner({ side = 'left' }) {
             }}
           >
             <div>METIN2</div>
-            <div>SEFIRI</div>
+            <div>UP</div>
           </div>
           <div className="mt-24 text-[#f3d27a] font-semibold text-sm tracking-wide">
             BU ALANA
@@ -44,7 +44,7 @@ export default function SideBanner({ side = 'left' }) {
           <div className="mt-6 text-[#f0c87a] text-[11px] opacity-90">
             <div>Reklam için iletişim</div>
             <div className="mt-1">Discord;</div>
-            <div>discord.gg/metin2sefiri</div>
+            <div>discord.gg/metin2up</div>
           </div>
         </div>
       </div>
