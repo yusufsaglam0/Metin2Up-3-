@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Metin2 Sefiri – Metin2 PVP Serverler, Tanıtımlar, Zor Serverler, Wslik Serverler, Farm Sunucuları ve daha fazlası." />
+  <title>Metin2 Sefiri – Forum | Metin2 PVP Serverler ve Tanıtımları</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/[email protected]/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Sol kenar reklam banner -->
+  <aside class="side-banner side-banner-left" aria-hidden="true">
+    <div class="side-banner-inner">
+      <div class="side-logo">METIN2<br/><span>SEFIRI</span></div>
+      <div class="side-ad">
+        <div class="side-ad-top">BU ALANA</div>
+        <div class="side-ad-mid">REKLAM</div>
+        <div class="side-ad-bot">VEREBİLİRİNİZ!</div>
+      </div>
+      <div class="side-contact">
+        <div>Reklam için iletişim</div>
+        <div>Discord;</div>
+        <div>discord.gg/metin2sefiri</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sağ kenar reklam banner -->
+  <aside class="side-banner side-banner-right" aria-hidden="true">
+    <div class="side-banner-inner">
+      <div class="side-logo">METIN2<br/><span>SEFIRI</span></div>
+      <div class="side-ad">
+        <div class="side-ad-top">BU ALANA</div>
+        <div class="side-ad-mid">REKLAM</div>
+        <div class="side-ad-bot">VEREBİLİRİNİZ!</div>
+      </div>
+      <div class="side-contact">
+        <div>Reklam için iletişim</div>
+        <div>Discord;</div>
+        <div>discord.gg/metin2sefiri</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Ana sarıcı -->
+  <div class="page-wrap">
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-main">METIN2</span>
+          <span class="brand-sub">SEFIRI</span>
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menü">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+          <a href="#" class="nav-link active">Anasayfa</a>
+          <a href="#" class="nav-link"><i class="bi bi-hdd-network"></i> Metin2 Pvp Sunucular</a>
+          <a href="#" class="nav-link"><i class="bi bi-megaphone"></i> Açılacak PvP Serverler</a>
+          <a href="#" class="nav-link">Rütbe Sistemi</a>
+          <a href="#" class="nav-link nav-highlight">Reklam</a>
+        </nav>
+
+        <div class="header-tools">
+          <button class="tool-btn" id="searchBtn" aria-label="Ara"><i class="bi bi-search"></i></button>
+          <button class="tool-btn" aria-label="Mesajlar">
+            <i class="bi bi-envelope"></i>
+            <span class="badge">1</span>
+          </button>
+          <button class="tool-btn" aria-label="Bildirimler">
+            <i class="bi bi-bell"></i>
+            <span class="badge">1</span>
+          </button>
+        </div>
+      </div>
+      <div class="search-bar" id="searchBar">
+        <div class="container">
+          <input type="text" placeholder="Forumda ara..." />
+        </div>
+      </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="container breadcrumb-wrap">
+      <div class="breadcrumb">
+        <i class="bi bi-house-door"></i>
+        <i class="bi bi-chevron-right"></i>
+        <span>Anasayfa</span>
+      </div>
+    </div>
+
+    <!-- Ana içerik -->
+    <main class="container main-layout">
+      <section class="forum-content" id="forumContent">
+        <!-- JS tarafından render edilecek -->
+      </section>
+
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <button class="sidebar-toggle" id="sidebarToggle">Yan Alanı Gizle <i class="bi bi-chevron-right"></i></button>
+        </div>
+
+        <!-- Giriş Kartı -->
+        <div class="login-card">
+          <div class="login-header">
+            <i class="bi bi-person-circle"></i>
+            <h3>HOŞGELDİNİZ</h3>
+          </div>
+          <form class="login-form" id="loginForm">
+            <label>
+              <span>Kullanıcı adı ya da e-posta adresi</span>
+              <div class="input-wrap">
+                <i class="bi bi-person"></i>
+                <input type="text" name="username" required />
+              </div>
+            </label>
+            <label>
+              <span>Parola</span>
+              <div class="input-wrap">
+                <i class="bi bi-lock"></i>
+                <input type="password" name="password" required />
+              </div>
+            </label>
+            <label class="remember-row">
+              <input type="checkbox" name="remember" checked />
+              Beni hatırla
+            </label>
+            <div class="login-buttons">
+              <button type="submit" class="btn btn-secondary">
+                <i class="bi bi-box-arrow-in-right"></i> Giriş Yap
+              </button>
+              <button type="button" class="btn btn-primary" id="registerBtn">
+                <i class="bi bi-person-plus"></i> Üye Ol
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Reklam Kart -->
+        <div class="ad-card-wrap">
+          <div class="ad-card-title">Bu Alana Reklam Verebilirsiniz.</div>
+          <div class="ad-card">
+            <i class="bi bi-megaphone-fill ad-icon"></i>
+            <div class="ad-tagline">BU ALAN TAM SİZİN İÇİN İŞTE!</div>
+            <div class="ad-subtag">Kitlelere ulaşmanın en etkili yolu burada.</div>
+            <div class="ad-big-1">BU ALANA</div>
+            <div class="ad-big-2">REKLAM</div>
+            <div class="ad-big-3">VEREBİLİRSİNİZ!</div>
+          </div>
+        </div>
+
+        <!-- Discord Kart -->
+        <div class="discord-card">
+          <i class="bi bi-discord"></i>
+          <div class="discord-text">
+            <div class="discord-title">Discord Sunucumuza Katıl!</div>
+            <div class="discord-sub">discord.gg/metin2sefiri</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- İstatistik -->
+    <section class="container">
+      <div class="stats-bar">
+        <h3 class="stats-title">FORUM İSTATİSTİKLERİ</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <i class="bi bi-chat-square-text"></i>
+            <div><span>Toplam Konu</span><strong>1.052</strong></div>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-reply"></i>
+            <div><span>Toplam Cevap</span><strong>728</strong></div>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-people"></i>
+            <div><span>Üyeler</span><strong>3.247</strong></div>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-person-plus"></i>
+            <div><span>Son Üye</span><strong>gameroglu</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">METIN2 SEFIRI</div>
+        <div class="footer-copy">© <span id="yearNow">2026</span> Metin2Sefiri.com – Tüm hakları saklıdır. Metin2 PVP Server Tanıtım Forumu.</div>
+        <nav class="footer-links">
+          <a href="#">Anasayfa</a>
+          <a href="#">İletişim</a>
+          <a href="#">Reklam</a>
+          <a href="#">Discord</a>
+          <a href="#">Kurallar</a>
+          <a href="#">Gizlilik</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Bildirim -->
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
