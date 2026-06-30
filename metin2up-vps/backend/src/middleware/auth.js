@@ -2,43 +2,35 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const User = require('../models/User');
 
-/**
- * Extract JWT from Authorization header.
- */
 function extractToken(req) {
   const auth = req.headers.authorization || '';
   if (auth.startsWith('Bearer ')) return auth.slice(7);
   return null;
 }
 
-/**
- * Required auth: 401 if missing/invalid.
- */
 async function requireAuth(req, res, next) {
   try {
     const token = extractToken(req);
-    if (!token) return res.status(401).json({ error: 'Yetkilendirme gerekli' });
+    if (!token) return res.status(401).json({ detail: 'Yetkilendirme gerekli' });
     const payload = jwt.verify(token, config.jwtSecret);
-    const user = await User.findById(payload.sub).select('-passwordHash');
-    if (!user) return res.status(401).json({ error: 'Kullanıcı bulunamadı' });
+    const user = await User.findById(payload.sub);
+    if (!user) return res.status(401).json({ detail: 'Kullanıcı bulunamadı' });
+    if (user.is_banned) return res.status(403).json({ detail: 'Hesabınız askıya alınmış' });
     req.user = user;
     req.userId = String(user._id);
     next();
   } catch (err) {
-    if (err.name === 'TokenExpiredError') return res.status(401).json({ error: 'Oturum süresi doldu' });
-    return res.status(401).json({ error: 'Geçersiz token' });
+    if (err.name === 'TokenExpiredError') return res.status(401).json({ detail: 'Oturum süresi doldu' });
+    return res.status(401).json({ detail: 'Geçersiz token' });
   }
 }
 
-/**
- * Optional auth: attaches req.user if token valid, otherwise continues.
- */
 async function optionalAuth(req, _res, next) {
   try {
     const token = extractToken(req);
     if (!token) return next();
     const payload = jwt.verify(token, config.jwtSecret);
-    const user = await User.findById(payload.sub).select('-passwordHash');
+    const user = await User.findById(payload.sub);
     if (user) {
       req.user = user;
       req.userId = String(user._id);

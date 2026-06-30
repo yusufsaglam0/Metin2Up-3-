@@ -25,7 +25,7 @@ router.post(
       const { username, email, password } = req.body;
       const exists = await User.findOne({ $or: [{ username }, { email: email.toLowerCase() }] });
       if (exists) {
-        return res.status(409).json({ error: 'Kullanıcı adı veya e-posta zaten kullanılıyor' });
+        return res.status(409).json({ detail: 'Kullanıcı adı veya e-posta zaten kullanılıyor' });
       }
       const user = new User({ username, email });
       await user.setPassword(password);
@@ -54,17 +54,15 @@ router.post(
       const { username, password } = req.body;
       const user = await User.findOne({
         $or: [{ username }, { email: username.toLowerCase() }],
-      }).select('+passwordHash');
-      if (!user) return res.status(401).json({ error: 'Kullanıcı adı veya şifre hatalı' });
-      if (user.isBanned) return res.status(403).json({ error: 'Hesabınız askya alınmış' });
+      }).select('+password_hash');
+      if (!user) return res.status(401).json({ detail: 'Kullanıcı adı veya şifre hatalı' });
+      if (user.is_banned) return res.status(403).json({ detail: 'Hesabınız askıya alınmış' });
       const ok = await user.verifyPassword(password);
-      if (!ok) return res.status(401).json({ error: 'Kullanıcı adı veya şifre hatalı' });
-      user.lastLoginAt = new Date();
+      if (!ok) return res.status(401).json({ detail: 'Kullanıcı adı veya şifre hatalı' });
+      user.last_login_at = new Date();
       await user.save();
       const token = signToken(user);
-      const safe = user.toJSON();
-      delete safe.passwordHash;
-      return res.json({ token, user: safe });
+      return res.json({ token, user: user.toJSON() });
     } catch (err) {
       next(err);
     }
@@ -84,16 +82,16 @@ router.get('/me', requireAuth, (req, res) => {
 router.post(
   '/change-password',
   requireAuth,
-  [body('currentPassword').isString().notEmpty(), body('newPassword').isString().isLength({ min: 6, max: 64 })],
+  [body('current_password').isString().notEmpty(), body('new_password').isString().isLength({ min: 6, max: 64 })],
   validate,
   async (req, res, next) => {
     try {
-      const { currentPassword, newPassword } = req.body;
-      const user = await User.findById(req.userId).select('+passwordHash');
-      if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
-      const ok = await user.verifyPassword(currentPassword);
-      if (!ok) return res.status(401).json({ error: 'Mevcut şifre hatalı' });
-      await user.setPassword(newPassword);
+      const { current_password, new_password } = req.body;
+      const user = await User.findById(req.userId).select('+password_hash');
+      if (!user) return res.status(404).json({ detail: 'Kullanıcı bulunamadı' });
+      const ok = await user.verifyPassword(current_password);
+      if (!ok) return res.status(401).json({ detail: 'Mevcut şifre hatalı' });
+      await user.setPassword(new_password);
       await user.save();
       res.json({ ok: true });
     } catch (err) {
