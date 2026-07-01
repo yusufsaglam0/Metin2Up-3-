@@ -1,6 +1,6 @@
 /**
  * Seed initial data: categories, subforums, ranks, admin user, sample topics.
- * Idempotent - safe to call multiple times.
+ * All field names use snake_case to match frontend expectations.
  */
 
 const Category = require('../models/Category');
@@ -117,12 +117,12 @@ const SEED_RANKS = [
 ];
 
 const SEED_TOPICS = [
-  { sub: 'vip', title: 'Metin2 Sohbet Grubu – Facebook Grubu', content: 'Metin2 sohbet grubuna katılmak için tıklayın.', isVip: true, views: 874, repliesCount: 2, verified: true },
-  { sub: 'sf-1-105', title: 'LotusMt2 1-105 Orta Emek açılıyor!', content: '27 Şubat’ta orta emek yapısı ile açılıyoruz.', views: 542, repliesCount: 12, verified: true },
-  { sub: 'sf-1-120', title: 'Metius2 1-120 Mobil Oyun – 29 Mayıs', content: 'Mobil ve PC uyumlu 1-120 server.', views: 320, repliesCount: 8, verified: true },
-  { sub: 'sf-wslik', title: 'VslikMt2 Hem Vslik/Farm Yapısı 19 Haziran', content: 'Vşlik + farm yapısı.', views: 780, repliesCount: 18, isNew: true },
-  { sub: 'sf-diger', title: 'Metin2 Tüm SYSSER Hataları ve Çözümleri', content: 'SYSSER dosyalarındaki hatalar.', views: 1200, repliesCount: 24 },
-  { sub: 'sf-wiki', title: 'Büyülü Orman ve Jotun Thrym Solo Kesim Rehberi', content: 'Solo kesim rehberi.', views: 520, repliesCount: 11 },
+  { sub: 'sf-1-105', title: 'Metin2 Sohbet Grubu - Facebook Grubu', content: 'Metin2 sohbet grubuna katılmak için tıklayın.', is_vip: true, views: 874, replies_count: 2, verified: true },
+  { sub: 'sf-1-105', title: 'LotusMt2 1-105 Orta Emek açılıyor!', content: '27 Şubat’ta orta emek yapısı ile açılıyoruz.', views: 542, replies_count: 12, verified: true },
+  { sub: 'sf-1-120', title: 'Metius2 1-120 Mobil Oyun - 29 Mayıs', content: 'Mobil ve PC uyumlu 1-120 server.', views: 320, replies_count: 8, verified: true },
+  { sub: 'sf-wslik', title: 'VslikMt2 Hem Vslik/Farm Yapısı 19 Haziran', content: 'Vşlik + farm yapısı.', views: 780, replies_count: 18, is_new: true },
+  { sub: 'sf-diger', title: 'Metin2 Tüm SYSSER Hataları ve Çözümleri', content: 'SYSSER dosyalarındaki hatalar.', views: 1200, replies_count: 24 },
+  { sub: 'sf-wiki', title: 'Büyülü Orman ve Jotun Thrym Solo Kesim Rehberi', content: 'Solo kesim rehberi.', views: 520, replies_count: 11 },
 ];
 
 async function seed() {
@@ -140,13 +140,14 @@ async function seed() {
     console.log(`✓ ${SEED_RANKS.length} rütbe seed edildi`);
   }
 
-  // Admin user (if no admin exists)
-  const adminExists = await User.findOne({ isAdmin: true });
+  // Admin user
+  const adminExists = await User.findOne({ is_admin: true });
   if (!adminExists) {
     const u = new User({
       username: config.admin.username,
       email: config.admin.email,
-      isAdmin: true,
+      is_admin: true,
+      is_seed: true,
       verified: true,
     });
     await u.setPassword(config.admin.password);
@@ -154,24 +155,24 @@ async function seed() {
     console.log(`✓ Admin '${config.admin.username}' oluşturuldu. SIFREYI DEGISTIRIN!`);
   }
 
-  // Sample topics
+  // Sample topics (idempotent: only if 0)
   const topicCount = await Topic.estimatedDocumentCount();
   if (topicCount === 0) {
-    const admin = await User.findOne({ isAdmin: true });
+    const admin = await User.findOne({ is_admin: true });
     if (admin) {
       for (const t of SEED_TOPICS) {
         await Topic.create({
-          subForumSlug: t.sub,
+          subforum_slug: t.sub,
           title: t.title,
           content: t.content,
           author: admin.username,
-          authorId: admin._id,
-          isVip: !!t.isVip,
-          isNew: !!t.isNew,
+          author_id: admin._id,
+          is_vip: !!t.is_vip,
+          is_new: !!t.is_new,
           verified: !!t.verified,
           views: t.views || 0,
-          repliesCount: t.repliesCount || 0,
-          lastReplyAt: new Date(),
+          replies_count: t.replies_count || 0,
+          last_reply_at: new Date(),
         });
       }
       console.log(`✓ ${SEED_TOPICS.length} örnek konu seed edildi`);

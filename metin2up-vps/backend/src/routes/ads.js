@@ -7,7 +7,8 @@ const { writeLimiter } = require('../middleware/rateLimit');
 const router = express.Router();
 
 /**
- * POST /api/ads/apply - Submit ad application (public).
+ * POST /api/ads/apply
+ * Body: { name, contact, message, ad_type }
  */
 router.post(
   '/apply',
@@ -16,20 +17,20 @@ router.post(
     body('name').isString().trim().isLength({ min: 1, max: 100 }),
     body('contact').isString().trim().isLength({ min: 3, max: 200 }),
     body('message').isString().trim().isLength({ min: 5, max: 2000 }),
-    body('adType').optional().isIn(['banner', 'vip', 'side', 'other']),
+    body('ad_type').optional().isIn(['banner', 'vip', 'side', 'sponsor', 'other']),
   ],
   validate,
   async (req, res, next) => {
     try {
-      const { name, contact, message, adType } = req.body;
+      const { name, contact, message, ad_type } = req.body;
       const doc = await AdApplication.create({
         name,
         contact,
         message,
-        adType: adType || 'banner',
+        ad_type: ad_type || 'banner',
         ip: req.ip || '',
       });
-      res.status(201).json({ ok: true, applicationId: doc._id.toString() });
+      res.status(201).json({ ok: true, id: doc._id.toString() });
     } catch (err) {
       next(err);
     }
