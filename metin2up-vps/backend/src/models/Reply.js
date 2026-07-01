@@ -2,20 +2,19 @@ const mongoose = require('mongoose');
 
 const replySchema = new mongoose.Schema(
   {
-    topicId: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required: true, index: true },
+    topic_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required: true, index: true },
     content: { type: String, required: true, trim: true, maxlength: 5000 },
     author: { type: String, required: true },
-    authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    author_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     verified: { type: Boolean, default: false },
-    isDeleted: { type: Boolean, default: false },
+    is_deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
-replySchema.index({ topicId: 1, createdAt: 1 });
+replySchema.index({ topic_id: 1, created_at: 1 });
 
 replySchema.set('toJSON', {
-  virtuals: true,
   versionKey: false,
   transform: (_doc, ret) => {
     ret.id = ret._id.toString();

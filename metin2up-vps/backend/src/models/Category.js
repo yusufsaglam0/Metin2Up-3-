@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const subForumSchema = new mongoose.Schema(
   {
-    slug: { type: String, required: true, unique: true, trim: true, lowercase: true },
+    slug: { type: String, required: true, trim: true, lowercase: true },
     name: { type: String, required: true, trim: true },
     description: { type: String, default: '' },
   },
@@ -18,11 +18,10 @@ const categorySchema = new mongoose.Schema(
     order: { type: Number, default: 0, index: true },
     subForums: { type: [subForumSchema], default: [] },
   },
-  { timestamps: true }
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
 categorySchema.set('toJSON', {
-  virtuals: true,
   versionKey: false,
   transform: (_doc, ret) => {
     ret.id = ret._id.toString();

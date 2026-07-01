@@ -20,6 +20,7 @@ const seed = require('./src/utils/seed');
 // Route imports
 const authRoutes = require('./src/routes/auth');
 const categoryRoutes = require('./src/routes/categories');
+const subforumRoutes = require('./src/routes/subforums');
 const topicRoutes = require('./src/routes/topics');
 const statsRoutes = require('./src/routes/stats');
 const rankRoutes = require('./src/routes/ranks');
@@ -29,15 +30,12 @@ const adminRoutes = require('./src/routes/admin');
 
 const app = express();
 
-// Trust proxy (for Nginx)
 if (config.trustProxy !== false) app.set('trust proxy', config.trustProxy);
 
-// Security middleware
 app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(mongoSanitize());
 app.use(hpp());
 
-// CORS
 app.use(cors({
   origin: (origin, cb) => {
     if (!origin) return cb(null, true);
@@ -47,20 +45,16 @@ app.use(cors({
   credentials: true,
 }));
 
-// Body parsers
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// Compression + logging
 app.use(compression());
 if (config.nodeEnv !== 'test') {
   app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 }
 
-// Global rate limit
 app.use('/api/', generalLimiter);
 
-// Health check
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'metin2up-api', env: config.nodeEnv, ts: new Date().toISOString() });
 });
@@ -72,6 +66,7 @@ app.get('/api', (_req, res) => {
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/subforums', subforumRoutes);     // <-- Frontend bekliyor: /api/subforums/:slug
 app.use('/api/topics', topicRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/ranks', rankRoutes);
@@ -79,12 +74,10 @@ app.use('/api/ads', adRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 
-// 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Endpoint bulunamadı', path: req.originalUrl });
+  res.status(404).json({ detail: 'Endpoint bulunamadı', path: req.originalUrl });
 });
 
-// Global error handler
 app.use(errorHandler);
 
 async function start() {

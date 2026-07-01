@@ -20,40 +20,39 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Geçersiz e-posta formatı'],
     },
-    passwordHash: { type: String, required: true, select: false },
+    password_hash: { type: String, required: true, select: false },
     avatar: { type: String, default: '' },
-    postCount: { type: Number, default: 0, index: true },
+    post_count: { type: Number, default: 0, index: true },
     verified: { type: Boolean, default: false, index: true },
-    isAdmin: { type: Boolean, default: false, index: true },
-    isBanned: { type: Boolean, default: false },
-    lastLoginAt: { type: Date },
+    is_admin: { type: Boolean, default: false, index: true },
+    is_seed: { type: Boolean, default: false },
+    is_banned: { type: Boolean, default: false },
+    last_login_at: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
-userSchema.virtual('id').get(function () { return this._id.toString(); });
 userSchema.set('toJSON', {
-  virtuals: true,
   versionKey: false,
   transform: (_doc, ret) => {
+    ret.id = ret._id.toString();
     delete ret._id;
-    delete ret.passwordHash;
+    delete ret.password_hash;
     return ret;
   },
 });
 
 userSchema.methods.setPassword = async function (plain) {
-  this.passwordHash = await bcrypt.hash(plain, 12);
+  this.password_hash = await bcrypt.hash(plain, 12);
 };
 
 userSchema.methods.verifyPassword = async function (plain) {
-  if (!this.passwordHash) {
-    // Need to refetch with passwordHash since it's select:false
-    const fresh = await this.constructor.findById(this._id).select('+passwordHash');
-    if (!fresh || !fresh.passwordHash) return false;
-    return bcrypt.compare(plain, fresh.passwordHash);
+  if (!this.password_hash) {
+    const fresh = await this.constructor.findById(this._id).select('+password_hash');
+    if (!fresh || !fresh.password_hash) return false;
+    return bcrypt.compare(plain, fresh.password_hash);
   }
-  return bcrypt.compare(plain, this.passwordHash);
+  return bcrypt.compare(plain, this.password_hash);
 };
 
 module.exports = mongoose.model('User', userSchema);
