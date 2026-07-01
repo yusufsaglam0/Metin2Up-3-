@@ -1,0 +1,611 @@
+import React, { useState, useEffect } from 'react';
+import './App.css'; 
+
+function App() {
+  const [categories, setCategories] = useState([]);
+  const [stats, setStats] = useState({ totalMembers: 0, totalThreads: 0, onlineUsers: 1 });
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [threads, setThreads] = useState([]);
+  const [newThreadTitle, setNewThreadTitle] = useState('');
+  const [newThreadContent, setNewThreadContent] = useState('');
+  const [isSubmittingThread, setIsSubmittingThread] = useState(false);
+  const [selectedThread, setSelectedThread] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newCommentContent, setNewCommentContentActual] = useState('');
+  const [currentScreen, setCurrentScreen] = useState('forum'); 
+  const [activeAdminTab, setActiveAdminTab] = useState('categories'); 
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatDesc, setNewCatDesc] = useState('');
+  const [newCatTags, setNewCatTags] = useState('Tasarım, Yazılım, Sosyal');
+  const [newCatIcon, setNewCatIcon] = useState('💬'); 
+  const [editingCatId, setEditingCatId] = useState(null);
+  const [editCatName, setEditCatName] = useState('');
+  const [editCatDesc, setEditCatDesc] = useState('');
+  const [editCatTags, setEditCatTags] = useState('');
+  const [mansetDuyuru, setMansetDuyuru] = useState('Metin2Up Gelişmiş Forum Dünyasına Hoş Geldiniz!'); 
+  const [mansetInput, setMansetInput] = useState('');
+  const [globalNotificationInput, setGlobalNotificationInput] = useState('');
+  const [notifications, setNotifications] = useState(['Metin2Up yönetim üssü kalıcı sisteme bağlandı.']);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [selectedUserDetail, setSelectedUserDetail] = useState(null);
+  const [forumUsers, setForumUsers] = useState([
+    { id: 1, name: 'DenemeOyuncu_01', email: 'player1@m2up.com', ip: '185.122.45.6', regDate: '2026-05-12', threadsCount: 14, status: 'Aktif' },
+    { id: 2, name: 'KuralTanımaz_99', email: 'kural99@gmail.com', ip: '94.54.122.89', regDate: '2026-06-01', threadsCount: 2, status: 'Aktif' },
+    { id: 3, name: 'LycanSever', email: 'wolfman@m2up.net', ip: '78.190.23.144', regDate: '2026-06-28', threadsCount: 45, status: 'Aktif' }
+  ]);
+  const [punishedUsers, setPunishedUsers] = useState([
+    { name: 'Spamci_Reis', type: 'Susturuldu', duration: '3 Gün', ip: '46.2.88.11' },
+    { name: 'Hileci_Dede', type: 'Banlandı', duration: 'Sınırsız', ip: '85.105.63.22' }
+  ]);
+
+  const fetchInitialData = () => {
+    setLoading(true);
+    fetch('/api/forum-data')
+      .then(res => res.json())
+      .then(data => {
+        if (data.categories) setCategories(data.categories);
+        if (data.stats) setStats(data.stats);
+        setLoading(false);
+      })
+      .catch(err => setLoading(false));
+  };
+  useEffect(() => {
+    fetchInitialData();
+    const savedUser = localStorage.getItem('m2up_user');
+    if (savedUser) setUser(JSON.parse(savedUser));
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!username || !password) { setMessage('Lütfen tüm alanları doldurun!'); return; }
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        const loggedInUser = { username: data.username, role: data.role || 'user' };
+        const isBanned = punishedUsers.some(p => p.name.toLowerCase() === data.username.toLowerCase() && p.type === 'Banlandı');
+        if(isBanned) { alert('Hesabınız kapatılmıştır!'); return; }
+        setUser(loggedInUser);
+        localStorage.setItem('m2up_user', JSON.stringify(loggedInUser));
+        setMessage(''); setUsername(''); setPassword('');
+      } else { setMessage('Kullanıcı adı veya şifre hatalı.'); }
+    } catch (err) { setMessage('Sunucu hatası.'); }
+  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (!username || !email || !password) { setMessage('Lütfen tüm alanları doldurun!'); return; }
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      if (response.ok) {
+        setMessage('Kayıt başarılı! Şimdi giriş yapabilirsiniz.');
+        setIsRegistering(false); setUsername(''); setEmail(''); setPassword('');
+      }
+    } catch (err) { setMessage('Sunucu hatası.'); }
+  };
+  const handleCreateCategory = async (e) => {
+    e.preventDefault();
+    if (!newCatName || !newCatDesc) return;
+    try {
+      const response = await fetch('/api/admin/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCatName, desc: newCatDesc, tags: newCatTags }),
+      });
+      if (response.ok) {
+        setNewCatName(''); setNewCatDesc('');
+        alert('Kategori veritabanına kalıcı eklendi!');
+        fetchInitialData();
+      }
+    } catch (error) { alert('Hata.'); }
+  };
+  const handleSaveCatEdit = async (cat) => {
+    const name = editCatName || cat.name;
+    const desc = editCatDesc || cat.desc;
+    const tags = editCatTags || cat.tags;
+    try {
+      await fetch(`/api/admin/categories/${cat.id}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, desc, tags, isHidden: cat.isHidden, isLocked: cat.isLocked })
+      });
+      setEditingCatId(null);
+      fetchInitialData();
+    } catch (err) { alert('Güncellenemedi.'); }
+  };
+  const handleToggleHideCategory = async (cat) => {
+    try {
+      await fetch(`/api/admin/categories/${cat.id}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: cat.name, desc: cat.desc, tags: cat.tags, isHidden: !cat.isHidden, isLocked: cat.isLocked })
+      });
+      fetchInitialData();
+    } catch (err) { alert('Hata.'); }
+  };
+  const handleToggleLockCategory = async (cat) => {
+    try {
+      await fetch(`/api/admin/categories/${cat.id}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: cat.name, desc: cat.desc, tags: cat.tags, isHidden: cat.isHidden, isLocked: !cat.isLocked })
+      });
+      fetchInitialData();
+    } catch (err) { alert('Hata.'); }
+  };
+  const handleDeleteCategory = async (id, name) => {
+    if(!window.confirm(`"${name}" veritabanından kalıcı olarak silinsin mi?`)) return;
+    try {
+      await fetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
+      fetchInitialData();
+    } catch (err) { alert('Silinemedi.'); }
+  };
+  const handleSendGlobalNotification = (e) => {
+    e.preventDefault();
+    if(!globalNotificationInput) return;
+    setNotifications([globalNotificationInput, ...notifications]);
+    setGlobalNotificationInput('');
+    alert('🔔 Bildirim tüm üyelere gönderildi.');
+  };
+
+  const handleBanUser = (targetUser, ip) => { 
+    if (window.confirm(`${targetUser} isimli kullanıcıyı BANLAMAK istiyor musunuz?`)) {
+      setPunishedUsers([...punishedUsers, { name: targetUser, type: 'Banlandı', duration: 'Sınırsız', ip: ip || 'Bilinmiyor' }]);
+      setForumUsers(forumUsers.filter(u => u.name !== targetUser));
+      alert(`${targetUser} forumdan uzaklaştırıldı.`);
+    }
+  };
+
+  const handleDeleteUser = (targetUser) => {
+    if (window.confirm(`${targetUser} kullanıcısını silmek istediğinize emin misiniz?`)) {
+      setForumUsers(forumUsers.filter(u => u.name !== targetUser));
+      alert(`${targetUser} tamamen silindi.`);
+    }
+  };
+
+  const handleMuteUser = (targetUser, duration, ip) => {
+    if (!duration) return;
+    setPunishedUsers([...punishedUsers, { name: targetUser, type: 'Susturuldu', duration: duration, ip: ip || 'Bilinmiyor' }]);
+    alert(`${targetUser} kullanıcısına ${duration} mute cezası verildi.`);
+  };
+
+  const handleRemovePunishment = (name) => {
+    if(window.confirm(`${name} cezasını kaldırmak istiyor musunuz?`)) {
+      const removed = punishedUsers.find(p => p.name === name);
+      setPunishedUsers(punishedUsers.filter(p => p.name !== name));
+      if(removed && removed.type === 'Banlandı') {
+        setForumUsers([...forumUsers, { id: Date.now(), name: name, email: 'restore@m2up.com', ip: removed.ip, regDate: '2026-07-01', threadsCount: 0, status: 'Aktif' }]);
+      }
+      alert(`${name} ceza kaydı temizlendi.`);
+    }
+  };
+  const handleCategoryClick = (category) => { 
+    setSelectedCategory(category); 
+    setSelectedThread(null); 
+    setLoading(true); 
+    fetch(`/api/categories/${category.id}/threads`)
+      .then(res => res.json())
+      .then(data => { setThreads(data || []); setLoading(false); }); 
+  };
+
+  const handleThreadClick = (thread) => { 
+    setSelectedThread(thread); 
+    setLoading(true); 
+    fetch(`/api/threads/${thread.id}/comments`)
+      .then(res => res.json())
+      .then(data => { setComments(data || []); setLoading(false); }); 
+  };
+  if (user && punishedUsers.some(p => p.name.toLowerCase() === user.username.toLowerCase() && p.type === 'Banlandı')) {
+    return (
+      <div className="banned-screen-box">
+        <div className="banned-msg">Metin2UP Mutluluklar Diler..</div>
+        <div className="banned-sub">Hesabınız kuralları ihlal ettiği için tamamen kapatılmıştır.</div>
+        <button className="modern-btn" style={{width: 'auto', marginTop: '20px', padding: '10px 20px'}} onClick={() => { setUser(null); localStorage.removeItem('m2up_user'); window.location.reload(); }}>Sistemden Çıkış Yap</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app-container">
+      <header className="main-header">
+<div 
+  className="logo-container" 
+  onClick={() => { 
+    setCurrentScreen('forum'); 
+    setSelectedCategory(null); 
+    setSelectedThread(null); 
+  }} 
+  style={{ display: 'flex', alignItems: 'center', gap: '15px', cursor: 'pointer' }}
+>
+  <img src="https://i.ibb.co/DZ8Wyt1/Mt2-UP-Sosyal-Medya-PP.jpg" alt="Metin2Up Logo" className="logo-img" />
+  <div className="logo-text">Metin2<span>Up</span></div>
+</div>
+
+        <nav className="nav-links">
+          <span onClick={() => { setCurrentScreen('forum'); setSelectedCategory(null); setSelectedThread(null); }} className={currentScreen === 'forum' ? 'active-nav' : ''}>Forum</span>
+          {user && user.role === 'admin' && <span onClick={() => setCurrentScreen('admin')} className={currentScreen === 'admin' ? 'active-nav admin-toggle' : 'admin-toggle'}>Admin Paneli</span>}
+        </nav>
+        <div className="header-right-zone" style={{ display: 'flex', alignItems: 'center', gap: '20px', position: 'relative' }}>
+          <button className="notification-btn" onClick={() => setShowNotifications(!showNotifications)}>🔔 Bildirimler ({notifications.length})</button>
+          {showNotifications && <div className="notification-dropdown"><h4>Son Bildirimler</h4>{notifications.map((notif, i) => <div key={i} className="notif-item">{notif}</div>)}<button onClick={() => setNotifications([])} className="clear-notif-btn">Temizle</button></div>}
+          <div className="welcome-text">{user ? `Hoş geldin, ${user.username}` : 'Hoş geldin, Ziyaretçi'}</div>
+        </div>
+      </header>
+
+      {mansetDuyuru && <div className="global-announcement-bar"><marquee className="ann-text" scrollamount="4">{mansetDuyuru}</marquee></div>}
+      {currentScreen === 'admin' && user && user.role === 'admin' ? (
+        <div className="admin-page-container" style={{ padding: '40px', maxWidth: '1400px', width: '100%', margin: '0 auto', display: 'flex', gap: '30px' }}>
+          <aside className="admin-sidebar" style={{ flex: '1' }}>
+            <div className="modern-card" style={{ padding: '15px' }}>
+              <h3>YÖNETİM ÜSSÜ</h3>
+              <button onClick={() => setActiveAdminTab('categories')} className={`modern-btn ${activeAdminTab === 'categories' ? '' : 'btn-danger'}`} style={{ marginBottom: '10px' }}>📁 Kategori Düzeni</button>
+              <button onClick={() => setActiveAdminTab('users')} className={`modern-btn ${activeAdminTab === 'users' ? '' : 'btn-danger'}`} style={{ marginBottom: '10px' }}>👥 Üye Kontrolü</button>
+              <button onClick={() => setActiveAdminTab('system')} className={`modern-btn ${activeAdminTab === 'system' ? '' : 'btn-danger'}`}>⚙️ Sistem & Bildirim</button>
+            </div>
+          </aside>
+
+          <section className="admin-main-content" style={{ flex: '3' }}>
+            {activeAdminTab === 'categories' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="modern-card">
+                  <h3>📁 Yeni Ana Kategori Oluştur</h3>
+                  <form onSubmit={handleCreateCategory}>
+                    <input type="text" className="modern-input" placeholder="Kategori Adı" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} />
+                    <input type="text" className="modern-input" placeholder="Kapsam Etiketleri" value={newCatTags} onChange={(e) => setNewCatTags(e.target.value)} />
+                    <textarea className="modern-input" placeholder="Açıklama..." value={newCatDesc} onChange={(e) => setNewCatDesc(e.target.value)} rows="2" />
+                    <button type="submit" className="modern-btn">Oluştur</button>
+                  </form>
+                </div>
+                <div className="modern-card">
+                  <h3>📌 Kategori Komuta Zinciri</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {categories.map((cat) => (
+                      <div key={cat.id} className="cat-management-row">
+                        <div>
+                          {editingCatId === cat.id ? (
+                            <div>
+                              <input type="text" className="modern-input" value={editCatName} onChange={(e) => setEditCatName(e.target.value)} />
+                              <button className="sort-btn" onClick={() => handleSaveCatEdit(cat)}>✔ Kaydet</button>
+                            </div>
+                          ) : (
+                            <>
+                              <b>{cat.name}</b> 
+                              <span style={{fontSize:'11px', color:'var(--text-secondary)'}}> [{cat.tags}] (Ziyaretçi: {cat.viewersCount})</span>
+                            </>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button className="sort-btn" onClick={() => { setEditingCatId(cat.id); setEditCatName(cat.name); setEditCatDesc(cat.desc); setEditCatTags(cat.tags); }}>✏</button>
+                          <button className="sort-btn" onClick={() => handleToggleHideCategory(cat)}>{cat.isHidden ? '👁️ Aç' : '👁️‍G Giz'}</button>
+                          <button className="sort-btn" onClick={() => handleToggleLockCategory(cat)}>{cat.isLocked ? '🔓 Çöz' : '🔒 Kilit'}</button>
+                          <button className="action-link text-red" onClick={() => handleDeleteCategory(cat.id, cat.name)}>Sil</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {activeAdminTab === 'users' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="modern-card">
+                  <h3>👥 Üye Kontrol Merkezi (IP Destekli)</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {forumUsers.map(fUser => (
+                      <div key={fUser.id} className="user-control-row">
+                        <div>
+                          <b style={{ cursor: 'pointer', color: 'var(--accent)', textDecoration: 'underline' }} onClick={() => setSelectedUserDetail(fUser)}>{fUser.name}</b>
+                          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '10px' }}>IP: {fUser.ip}</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                          <select className="mute-select" onChange={(e) => { handleMuteUser(fUser.name, e.target.value, fUser.ip); e.target.value = ""; }}>
+                            <option value="">Sustur...</option>
+                            <option value="1 Gün">1 Gün</option><option value="3 Gün">3 Gün</option><option value="7 Gün">7 Gün</option><option value="14 Gün">14 Gün</option><option value="1 Ay">1 Ay</option><option value="Sınırsız">Sınırsız</option>
+                          </select>
+                          <button className="action-link text-red" onClick={() => handleBanUser(fUser.name, fUser.ip)}>Yasakla</button>
+                          <button className="action-link text-gray" onClick={() => handleDeleteUser(fUser.name)}>Sil</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedUserDetail && (
+                  <div className="modern-card" style={{ border: '1px solid var(--accent)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <h4 style={{ color: 'var(--accent)' }}>🔍 Profil Kartı: {selectedUserDetail.name}</h4>
+                      <button className="action-link text-red" onClick={() => setSelectedUserDetail(null)}>Kapat [X]</button>
+                    </div>
+                    <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
+                      <div><b>E-Posta:</b> {selectedUserDetail.email}</div><div><b>IP No:</b> {selectedUserDetail.ip}</div><div><b>Kayıt:</b> {selectedUserDetail.regDate}</div><div><b>Konu:</b> {selectedUserDetail.threadsCount}</div>
+                    </div>
+                  </div>
+                )}
+                <div className="modern-card">
+                  <h3>⚖️ Cezalı Defteri & Ceza Kaldırma</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {punishedUsers.map((pUser, i) => (
+                      <div key={i} className="punished-row">
+                        <div><b>{pUser.name}</b><span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '10px' }}>IP: {pUser.ip}</span></div>
+                        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                          <span className={`punished-badge ${pUser.type === 'Banlandı' ? 'badge-ban' : 'badge-mute'}`}>{pUser.type} ({pUser.duration})</span>
+                          <button className="action-link text-gray" style={{ textDecoration: 'underline' }} onClick={() => handleRemovePunishment(pUser.name)}>Kaldır</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeAdminTab === 'system' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="modern-card">
+                  <h3>📢 Manşet Duyuruyu Güncelle (Kayan Yazı)</h3>
+                  <form onSubmit={(e) => { e.preventDefault(); setMansetDuyuru(mansetInput); setMansetInput(''); alert('Manşet Duyuru güncellendi!'); }}>
+                    <input type="text" className="modern-input" placeholder="Yeni manşet metni..." value={mansetInput} onChange={(e) => setMansetInput(e.target.value)} />
+                    <button type="submit" className="modern-btn" style={{ width: 'auto' }}>Güncelle</button>
+                  </form>
+                </div>
+                <div className="modern-card">
+                  <h3>🔔 Tüm Üyelere Anlık Bildirim Gönder (+1)</h3>
+                  <form onSubmit={handleSendGlobalNotification}>
+                    <input type="text" className="modern-input" placeholder="Bildirim mesajı..." value={globalNotificationInput} onChange={(e) => setGlobalNotificationInput(e.target.value)} />
+                    <button type="submit" className="modern-btn" style={{ width: 'auto' }}>Bildirimi Fırlat</button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </section>
+        </div>
+      ) : (
+        <main className="main-content">
+          <section className="left-section">
+            {!user ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="guest-blocker-info">🔒 <b>Ziyaretçi Modu:</b> Forum kategorilerini, içerikleri, beğenileri ve yorumları görebilmek için lütfen sağ taraftan **Giriş Yapın** veya **Kayıt Olun**.</div>
+                <div className="modern-card" style={{ opacity: '0.3', pointerEvents: 'none' }}><h3>📌 Forum Kategorileri (Kilitli)</h3></div>
+              </div>
+            ) : !selectedCategory ? (
+              <div className="modern-card">
+                <h3>📌 Forum Kategorileri</h3>
+                <div className="categories-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {categories
+                    .filter(cat => !cat.isHidden || (user && user.role === 'admin'))
+                    .map((category) => (
+                      <div key={category.id} onClick={() => handleCategoryClick(category)} style={{ padding: '16px', background: 'var(--bg-input)', borderRadius: '8px', cursor: 'pointer' }}>
+                        <h4>{category.icon} {category.name} 
+                          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '10px' }}>
+                            (Gerçek Konu: {category.threadsCount} {user && user.role === 'admin' ? `| Aktif: ${category.viewersCount}` : ''})
+                          </span>
+                        </h4>
+                        <div style={{ fontStyle: 'italic', fontSize: '12px', color: 'var(--accent)', margin: '4px 0' }}>Kapsam: {category.tags}</div>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{category.desc || category.description}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ) : (
+              <div className="modern-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h3>💬 {selectedCategory.name} Bölümü</h3><button className="modern-btn" style={{ width: 'auto', padding: '8px 16px' }} onClick={() => setSelectedCategory(null)}>← Geri Dön</button>
+                </div>
+                {selectedCategory.isLocked && <div style={{ color: '#f1c40f', fontSize: '13px', marginBottom: '15px', border: '1px dashed #f1c40f', padding: '10px', borderRadius: '6px' }}>🔒 Bu kategori yeni paylaşımlara kapatılmıştır.</div>}
+{/* O pratik "Bu Bölümde Yeni Başlık Aç" Formunun Geri Gelmesi */}
+<form onSubmit={(e) => {
+  e.preventDefault();
+  if (!user) { alert('Konu açmak için lütfen giriş yapın!'); return; }
+  if (!newThreadTitle || !newThreadContent) { alert('Lütfen başlık ve içerik girin!'); return; }
+  
+  setIsSubmittingThread(true); // Çift tıklamayı engellemek için butonu anlık kilitler
+  
+  fetch(`/api/categories/${selectedCategory.id}/threads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: newThreadTitle, content: newThreadContent, author: user.username })
+  }).then(res => {
+    if (res.ok) {
+      setNewThreadTitle(''); 
+      setNewThreadContent('');
+      alert('📢 Başlık Başarıyla Açıldı!');
+      // Konu listesini veritabanından anlık olarak tazeler
+      fetch(`/api/categories/${selectedCategory.id}/threads`)
+        .then(res => res.json())
+        .then(data => setThreads(data || []));
+    } else {
+      alert('Konu gönderilirken bir hata oluştu.');
+    }
+  }).finally(() => {
+    setIsSubmittingThread(false); // İşlem bitince butonu tekrar açar
+  });
+}} style={{ marginBottom: '25px', borderBottom: '1px solid var(--border)', paddingBottom: '20px' }}>
+  <h4 style={{ color: 'var(--accent)', marginBottom: '10px' }}>✍️ Bu Bölümde Yeni Başlık Aç</h4>
+  <input type="text" className="modern-input" placeholder="Konu Başlığı..." value={newThreadTitle} onChange={(e) => setNewThreadTitle(e.target.value)} />
+  <textarea className="modern-input" placeholder="Konu içeriğini detaylıca yazın..." value={newThreadContent} onChange={(e) => setNewThreadContent(e.target.value)} rows="3" />
+  <button type="submit" disabled={isSubmittingThread} className="modern-btn" style={{ width: 'auto', padding: '8px 20px' }}>
+    {isSubmittingThread ? 'Yayınlanıyor...' : 'Konuyu Yayınla'}
+  </button>
+</form>
+{threads && threads.length > 0 ? (
+  threads
+    .sort((a, b) => (b.isPinned || 0) - (a.isPinned || 0))
+    .map((t, idx) => (
+      <div 
+        key={t.id} 
+        onClick={(e) => {
+          if (e.target.tagName === 'BUTTON') return;
+          handleThreadClick(t);
+        }}
+        style={{ 
+          padding: '16px', 
+          borderBottom: '1px solid var(--border)', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          cursor: 'pointer',
+          background: 'var(--bg-input)',
+          borderRadius: '6px',
+          marginBottom: '6px',
+          transition: 'all 0.2s'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = '#22262c'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-input)'}
+      >
+        <div style={{ flex: 1 }}>
+          <span style={{ fontWeight: '600', color: t.isPinned ? '#ff4757' : 'var(--text-primary)', fontSize: '14px' }}>
+            {t.isPinned ? '📌 ' : ''} {t.title}
+          </span>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '12px' }}>
+            Yazar: <b style={{ color: 'var(--accent)' }}>{t.author || 'Anonim'}</b>
+          </span>
+        </div>
+        
+        {user && user.role === 'admin' && (
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <button className="sort-btn" style={{ padding: '3px 8px', fontSize: '11px' }} onClick={() => {
+              const yeniBaslik = prompt("Konu başlığını düzenleyin:", t.title);
+              if (yeniBaslik) {
+                fetch(`/api/threads/${t.id}/update`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ title: yeniBaslik, content: t.content || '', isPinned: t.isPinned || false })
+                }).then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()).then(data => setThreads(data || [])));
+              }
+            }}>✏️ Düzenle</button>
+            
+            <button className="sort-btn" style={{ padding: '3px 8px', fontSize: '11px' }} onClick={() => {
+              fetch(`/api/threads/${t.id}/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: t.title, content: t.content || '', isPinned: !t.isPinned })
+              }).then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()).then(data => setThreads(data || [])));
+            }}>{t.isPinned ? '📌 Çöz' : '📌 Sabitle'}</button>
+            
+            <button disabled={idx === 0} className="sort-btn" style={{ padding: '3px 6px', fontSize: '11px' }} onClick={() => {
+              const updated = [...threads];
+              const temp = updated[idx]; updated[idx] = updated[idx - 1]; updated[idx - 1] = temp;
+              setThreads(updated);
+            }}>▲</button>
+            
+            <button disabled={idx === threads.length - 1} className="sort-btn" style={{ padding: '3px 6px', fontSize: '11px' }} onClick={() => {
+              const updated = [...threads];
+              const temp = updated[idx]; updated[idx] = updated[idx + 1]; updated[idx + 1] = temp;
+              setThreads(updated);
+            }}>▼</button>
+            
+            <button className="action-link text-red" style={{ fontSize: '11px', marginLeft: '5px' }} onClick={() => {
+              if (window.confirm('Bu konuyu kalıcı olarak silmek istiyor musunuz?')) {
+                fetch(`/api/threads/${t.id}`, { method: 'DELETE' })
+                  .then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()).then(data => setThreads(data || [])));
+              }
+            }}>🗑️ Sil</button>
+			
+      key={t.id} 
+      onClick={(e) => {
+        // Eğer tıklanan şey bir buton ise konunun içine girmeyi engelle (butonlar bağımsız çalışsın)
+        if (e.target.tagName === 'BUTTON') return;
+        handleThreadClick(t);
+      }}
+      style={{ 
+        padding: '16px', 
+        borderBottom: '1px solid var(--border)', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        cursor: 'pointer',
+        background: 'var(--bg-input)',
+        borderRadius: '6px',
+        marginBottom: '6px',
+        transition: 'all 0.2s'
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.background = '#22262c'}
+      onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-input)'}
+      
+      {/* Sadece Yönetici Ekranında Çıkan Kontrol Elemanları */}
+      {user && user.role === 'admin' && (
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <button className="sort-btn" style={{ padding: '3px 8px', fontSize: '11px' }} onClick={() => {
+            const yeniBaslik = prompt("Konu başlığını düzenleyin:", t.title);
+            if (yeniBaslik) {
+              fetch(`/api/threads/${t.id}/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: yeniBaslik, content: t.content || '', isPinned: t.isPinned || false })
+              }).then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()).then(data => setThreads(data || [])));
+            }
+          }}>✏️ Düzenle</button>
+          
+          <button className="sort-btn" style={{ padding: '3px 8px', fontSize: '11px' }} onClick={() => {
+            fetch(`/api/threads/${t.id}/update`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title: t.title, content: t.content || '', isPinned: !t.isPinned })
+            }).then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()).then(data => setThreads(data || [])));
+          }}>{t.isPinned ? '📌 Çöz' : '📌 Sabitle'}</button>
+          
+          <button disabled={idx === 0} className="sort-btn" style={{ padding: '3px 6px', fontSize: '11px' }} onClick={() => {
+            const updated = [...threads];
+            const temp = updated[idx]; updated[idx] = updated[idx - 1]; updated[idx - 1] = temp;
+            setThreads(updated);
+          }}>▲</button>
+          
+          <button disabled={idx === threads.length - 1} className="sort-btn" style={{ padding: '3px 6px', fontSize: '11px' }} onClick={() => {
+            const updated = [...threads];
+            const temp = updated[idx]; updated[idx] = updated[idx + 1]; updated[idx + 1] = temp;
+            setThreads(updated);
+          }}>▼</button>
+          <button className="action-link text-red" style={{ fontSize: '11px', marginLeft: '5px' }} onClick={() => {
+            if (window.confirm('Bu konuyu kalıcı olarak silmek istiyor musunuz?')) {
+              fetch(`/api/threads/${t.id}`, { method: 'DELETE' })
+                .then(() => fetch(`/api/categories/${selectedCategory.id}/threads`).then(res => res.json()))
+                .then(data => setThreads(data || []));
+            }
+          }}>Sil</button>
+        </div>
+      ))) : (
+        <p style={{ color: 'var(--text-secondary)' }}>Bu kategoride henüz hiç konu açılmamış.</p>
+      )}
+
+          <aside className="sidebar-container">
+            <div className="modern-card text-center">
+              {user ? (
+                <div><h3>Hesabım</h3><p>Kullanıcı: <b>{user.username}</b></p><button className="modern-btn btn-danger" onClick={() => { setUser(null); localStorage.removeItem('m2up_user'); window.location.reload(); }}>Çıkış Yap</button></div>
+              ) : (
+                <div>
+                  <h3>{isRegistering ? 'Kayıt Ol' : 'Giriş Yap'}</h3>
+                  <form onSubmit={isRegistering ? handleRegister : handleLogin}>
+                    <input type="text" className="modern-input" placeholder="Kullanıcı Adı" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <input type="password" className="modern-input" placeholder="Şifre" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <button type="submit" className="modern-btn">{isRegistering ? 'Kayıt Ol' : 'Giriş Yap'}</button>
+                  </form>
+                  <p style={{marginTop:'10px', cursor:'pointer', color:'var(--accent)'}} onClick={() => setIsRegistering(!isRegistering)}>{isRegistering ? 'Giriş Yap' : 'Kayıt Ol'}</p>
+                </div>
+              )}
+            </div>
+            <div className="modern-card">
+              <h3>📊 İstatistikler</h3>
+              <div className="stats-row"><span className="stats-label">Üye:</span><span className="stats-value">{stats.totalMembers}</span></div>
+              <div className="stats-row"><span className="stats-label">Konu:</span><span className="stats-value">{stats.totalThreads}</span></div>
+            </div>
+          </aside>
+        </main>
+      )}
+    </div>
+  );
+}
+
+export default App;

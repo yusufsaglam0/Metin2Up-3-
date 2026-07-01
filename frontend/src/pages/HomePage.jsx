@@ -66,10 +66,10 @@ export default function HomePage() {
         <footer className="border-t border-[#2a1518] bg-[#0a0607] mt-8">
           <div className="max-w-[1100px] mx-auto px-4 py-6 text-center">
             <div className="text-[#c98a1a] font-bold text-lg tracking-wide" style={{ fontFamily: "'Cinzel', serif" }}>
-              METIN2 SEFIRI
+              METIN2UP
             </div>
             <div className="text-gray-500 text-[11px] mt-2">
-              © {new Date().getFullYear()} Metin2Sefiri.com – Tüm hakları saklıdır. Metin2 PVP Server Tanıtım Forumu.
+              © {new Date().getFullYear()} Metin2Metin2Up.com – Tüm hakları saklıdır. Metin2 PVP Server Tanıtım Forumu.
             </div>
             <div className="flex items-center justify-center gap-4 mt-3 text-[12px]">
               <a href="#" className="text-gray-400 hover:text-[#e8c46b]">Anasayfa</a>

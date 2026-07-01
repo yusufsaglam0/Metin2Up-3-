@@ -1,10 +1,10 @@
-/* Metin2 Sefiri - Forum kategori verileri
+/* Metin2Up - Forum kategori verileri
    Buradan d\u00fczenleyebilirsin */
 
 window.vipTopics = [
   {
     title: 'Metin2 Sohbet Grubu \u2013 Facebook Grubu',
-    author: 'Metin2Sefiri',
+    author: 'Metin2Metin2Up',
     authorInitial: 'M',
     verified: true,
     replies: 2,
@@ -151,7 +151,7 @@ window.forumData = [
         description: 'Metin2 Lonca Tan\u0131t\u0131m B\u00f6lgesi.',
         topics: 20,
         replies: 14,
-        lastPost: { title: 'ABSORBE EK\u0130B\u0130 +40 KADROSU \u0130LE DEVAM ALIMLAR ACIK TS3 !', user: 'Metin2Sefiri', initial: 'M', verified: true }
+        lastPost: { title: 'ABSORBE EK\u0130B\u0130 +40 KADROSU \u0130LE DEVAM ALIMLAR ACIK TS3 !', user: 'Metin2Metin2Up', initial: 'M', verified: true }
       },
       {
         name: 'Metin Sohbet - Tart\u0131\u015fma Alan\u0131',
@@ -187,14 +187,14 @@ window.forumData = [
         description: 'C++, C# ve Python kodlama payla\u015f\u0131m alan\u0131.',
         topics: 9,
         replies: 6,
-        lastPost: { title: 'Metin2 \u2013 Site Domainler Sat\u0131l\u0131kt\u0131r !', user: 'Metin2Sefiri', initial: 'M', verified: true }
+        lastPost: { title: 'Metin2 \u2013 Site Domainler Sat\u0131l\u0131kt\u0131r !', user: 'Metin2Metin2Up', initial: 'M', verified: true }
       },
       {
         name: 'Metin2 GM Kodlar\u0131',
-        description: 'Metin2 GM Kodlar\u0131na Burdan Bakabilirsiniz - Metin2 Sefiri.',
+        description: 'Metin2 GM Kodlar\u0131na Burdan Bakabilirsiniz - Metin2Up.',
         topics: 36,
         replies: 17,
-        lastPost: { title: '\u00c7iftel Silah Kodlar\u0131', user: 'Metin2 Sefiri Moderet\u00f6r', initial: 'M', verified: true }
+        lastPost: { title: '\u00c7iftel Silah Kodlar\u0131', user: 'Metin2Up Moderet\u00f6r', initial: 'M', verified: true }
       },
       {
         name: 'Metin2 PvP Quest Payla\u015f\u0131mlar\u0131',
