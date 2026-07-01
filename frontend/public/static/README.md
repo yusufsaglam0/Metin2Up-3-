@@ -1,4 +1,4 @@
-# Metin2 Sefiri – Statik Klon
+# Metin2Up – Statik Klon
 
 ## cPanel Yüklemesi
 

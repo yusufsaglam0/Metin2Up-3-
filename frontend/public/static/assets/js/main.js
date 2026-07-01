@@ -1,4 +1,4 @@
-/* Metin2 Sefiri - Main JS
+/* Metin2Up - Main JS
    Render + etkile\u015fim mant\u0131\u011f\u0131 */
 
 (function () {
